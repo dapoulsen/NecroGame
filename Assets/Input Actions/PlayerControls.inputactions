@@ -1,9 +1,9 @@
 {
     "version": 1,
-    "name": "PlayerControl",
+    "name": "PlayerControls",
     "maps": [
         {
-            "name": "Ground",
+            "name": "Player",
             "id": "7c9d6043-457b-44e3-a6b5-5498ccf27be5",
             "actions": [
                 {
@@ -14,6 +14,15 @@
                     "processors": "",
                     "interactions": "Press(behavior=2)",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "50a47afb-ded1-4dfc-ba93-532bfa39acbf",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -93,6 +102,28 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "a27a95d2-d2f6-47ee-b626-0ad70d7f3a51",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8256225e-d620-40a5-9b9b-1725cec94bf8",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

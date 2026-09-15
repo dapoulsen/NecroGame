@@ -546,7 +546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef7cd58615c3ffa48b2cd05b4c9b3606, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  movementSpeed: 0.01
+  movementSpeed: 5
   MoveAction:
     m_Name: Move
     m_Type: 0
@@ -554,7 +554,31 @@ MonoBehaviour:
     m_Id: 8e4a2a37-d054-4557-ac12-7c2b248be409
     m_Processors: 
     m_Interactions: 
-    m_SingletonActionBindings: []
+    m_SingletonActionBindings:
+    - m_Name: AD keys
+      m_Id: c62fa03d-ea87-4c02-ae01-c8582aa5c17b
+      m_Path: 1DAxis
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move
+      m_Flags: 4
+    - m_Name: negative
+      m_Id: db6e8830-8a04-47c7-9f60-34e73d2131e3
+      m_Path: <Keyboard>/a
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move
+      m_Flags: 8
+    - m_Name: positive
+      m_Id: 9c89900b-9cf1-488a-8c76-a7d5a25d5c93
+      m_Path: <Keyboard>/d
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move
+      m_Flags: 8
     m_Flags: 0
 --- !u!50 &1653044950
 Rigidbody2D:
@@ -582,7 +606,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 7
+  m_Constraints: 4
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -4,29 +4,30 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     // Movement tuning
-    public float movementSpeed = 0.01f;
-    private Vector2 _moveInput;
-    public InputAction MoveAction; 
+    public float movementSpeed = 5f;
+    private float _moveInput;
+    private PlayerControls _controls;
+    private Rigidbody2D _rb;
 
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Awake()
+    {
+        _rb = GetComponent<Rigidbody2D>();
+        _controls = new PlayerControls();
+    }
+
+    
     //Called when player becomes enabled or active
     void OnEnable() {
-        //Enable the MoveAction so it starts reading input
-        MoveAction.Enable();
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
+        _controls.Player.Enable();
     }
 
     // Update is called once per frame
     void Update()
     {
         // Read the 2D vector from the MoveAction
-       _moveInput = MoveAction.ReadValue<Vector2>(); 
+       _moveInput = _controls.Player.Move.ReadValue<float>();
 
-       Vector2 position = (Vector2)transform.position + _moveInput * movementSpeed;
-
-       transform.position = position;
+       transform.position += Vector3.right * _moveInput * movementSpeed * Time.deltaTime;
     }
 }
