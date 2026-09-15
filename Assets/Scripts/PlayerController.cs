@@ -5,6 +5,8 @@ public class PlayerController : MonoBehaviour
 {
     // Movement tuning
     public float movementSpeed = 5f;
+    public float jumpForce = 8f;
+    
     private float _moveInput;
     private PlayerControls _controls;
     private Rigidbody2D _rb;
@@ -20,6 +22,7 @@ public class PlayerController : MonoBehaviour
     //Called when player becomes enabled or active
     void OnEnable() {
         _controls.Player.Enable();
+        _controls.Player.Jump.performed += OnJump;
     }
 
     // Update is called once per frame
@@ -29,5 +32,10 @@ public class PlayerController : MonoBehaviour
        _moveInput = _controls.Player.Move.ReadValue<float>();
 
        transform.position += Vector3.right * _moveInput * movementSpeed * Time.deltaTime;
+    }
+
+    void OnJump(InputAction.CallbackContext ctx)
+    {
+        _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
     }
 }
