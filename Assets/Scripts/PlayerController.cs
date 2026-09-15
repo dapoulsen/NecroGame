@@ -54,4 +54,11 @@ public class PlayerController : MonoBehaviour
             _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
     }
+
+    void OnDrawGizmosSelected()
+    {
+        if (groundCheck == null) return;
+        Gizmos.color = Color.red;
+        Gizmos.DrawCube(groundCheck.position, groundCheckSize);
+    }
 }
