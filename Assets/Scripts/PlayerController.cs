@@ -11,6 +11,9 @@ public class PlayerController : MonoBehaviour
     public Vector2 groundCheckSize = new Vector2(0.4f, 0.1f);
     public LayerMask groundLayer;
 
+    public Transform respawnPoint;
+    public GameObject deadBodyPrefab;
+
     private float _moveInput;
     private PlayerControls _controls;
     private Rigidbody2D _rb;
@@ -53,6 +56,23 @@ public class PlayerController : MonoBehaviour
         {
             _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Spike"))
+        {
+            Die();
+        }   
+    }
+
+    void Die()
+    {
+        //Spawn body at death location, facing the same way
+        Instantiate(deadBodyPrefab, transform.position, transform.rotation);
+
+        _rb.linearVelocity = Vector2.zero; // Stop any falling jumping momentum
+        transform.position = respawnPoint.position;
     }
 
     void OnDrawGizmosSelected()
