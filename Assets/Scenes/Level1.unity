@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 1062771879}
   - component: {fileID: 1062771881}
   m_Layer: 0
-  m_Name: Square
+  m_Name: Buttom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -547,47 +547,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   movementSpeed: 0.01
-  MoveAction:
-    m_Name: Move
-    m_Type: 0
-    m_ExpectedControlType: Vector2
-    m_Id: c52ec1d6-1cdb-4ba4-bf9a-e32753482a81
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 2D Vector
-      m_Id: f9c247dc-0681-4357-a2ec-5f85e7584f15
-      m_Path: 2DVector
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Move
-      m_Flags: 4
-    - m_Name: down
-      m_Id: ff4a402f-7f64-4bd4-a710-9e150701fab0
-      m_Path: <Keyboard>/s
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Move
-      m_Flags: 8
-    - m_Name: left
-      m_Id: af2cd5b2-3c53-44c4-b2bd-5c3422c90bc6
-      m_Path: <Keyboard>/a
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Move
-      m_Flags: 8
-    - m_Name: right
-      m_Id: 9fa21e8f-39d5-4906-922f-858ba36e534d
-      m_Path: <Keyboard>/d
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Move
-      m_Flags: 8
-    m_Flags: 0
 --- !u!50 &1653044950
 Rigidbody2D:
   serializedVersion: 5
