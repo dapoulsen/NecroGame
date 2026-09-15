@@ -7,9 +7,14 @@ public class PlayerController : MonoBehaviour
     public float movementSpeed = 5f;
     public float jumpForce = 8f;
     
+    public Transform groundCheck;
+    public Vector2 groundCheckSize = new Vector2(0.4f, 0.1f);
+    public LayerMask groundLayer;
+
     private float _moveInput;
     private PlayerControls _controls;
     private Rigidbody2D _rb;
+    private bool _isGrounded;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -25,6 +30,12 @@ public class PlayerController : MonoBehaviour
         _controls.Player.Jump.performed += OnJump;
     }
 
+    void OnDisable()
+    {
+        _controls.Player.Jump.performed -= OnJump;
+        _controls.Player.Disable();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -32,10 +43,15 @@ public class PlayerController : MonoBehaviour
        _moveInput = _controls.Player.Move.ReadValue<float>();
 
        transform.position += Vector3.right * _moveInput * movementSpeed * Time.deltaTime;
+
+       _isGrounded = Physics2D.OverlapBox(groundCheck.position, groundCheckSize, 0f, groundLayer);
     }
 
     void OnJump(InputAction.CallbackContext ctx)
     {
-        _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        if (_isGrounded)
+        {
+            _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        }
     }
 }
