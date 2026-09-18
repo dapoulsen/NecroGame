@@ -160,8 +160,9 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  respawnPoint: {fileID: 0}
+  respawnPoint: {fileID: 837931887206600152, guid: 64d12a14c98ac784985f812d88ee11e8, type: 3}
   deadBodyPrefab: {fileID: 8186893728755568091, guid: 996d28481deba9240bece17b3ba751db, type: 3}
+  spriteRenderer: {fileID: 0}
 --- !u!50 &7724027535723982438
 Rigidbody2D:
   serializedVersion: 5

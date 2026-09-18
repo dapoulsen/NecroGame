@@ -7,13 +7,20 @@ public class PlayerController : MonoBehaviour
     public float movementSpeed = 5f;
     public float jumpForce = 8f;
     
+    // Make sure player only can jump when on ground
     public Transform groundCheck;
     public Vector2 groundCheckSize = new Vector2(0.4f, 0.1f);
     public LayerMask groundLayer;
 
+    // The point where the player should respawn
     public Transform respawnPoint;
+    //The sprite to be spawned when you die
     public GameObject deadBodyPrefab;
 
+    // Sprite to flip it when moving left
+    public SpriteRenderer spriteRenderer;
+
+    // Player controls and fields that are private
     private float _moveInput;
     private PlayerControls _controls;
     private Rigidbody2D _rb;
@@ -24,6 +31,7 @@ public class PlayerController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _controls = new PlayerControls();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     
@@ -47,7 +55,14 @@ public class PlayerController : MonoBehaviour
 
        transform.position += Vector3.right * _moveInput * movementSpeed * Time.deltaTime;
 
+        // Set field to if player is on ground or not
        _isGrounded = Physics2D.OverlapBox(groundCheck.position, groundCheckSize, 0f, groundLayer);
+
+       //Flip sprite when moving left
+       if (_moveInput > 0f)
+            spriteRenderer.flipX = false;
+        else if (_moveInput < 0f)
+            spriteRenderer.flipX = true;
     }
 
     void OnJump(InputAction.CallbackContext ctx)
