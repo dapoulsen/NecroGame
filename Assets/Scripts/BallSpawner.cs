@@ -21,4 +21,5 @@ public class BallSpawner : MonoBehaviour
         BallProjectile ball = newBall.GetComponent<BallProjectile>();
         ball.SetSpawner(this);
     }
+    
 }
