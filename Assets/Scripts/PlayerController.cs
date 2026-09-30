@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,8 +9,8 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 8f;
     
     // Make sure player only can jump when on ground
-    public Transform groundCheck;
     public Vector2 groundCheckSize = new Vector2(0.4f, 0.1f);
+    public float groundCheckOffset = 0.02f; // Hvor højt over transform.position boxen sidder
     public LayerMask groundLayer;
 
     // The point where the player should respawn
@@ -18,7 +19,7 @@ public class PlayerController : MonoBehaviour
     public GameObject deadBodyPrefab;
 
     // Sprite to flip it when moving left
-    public SpriteRenderer spriteRenderer;
+    private SpriteRenderer spriteRenderer;
 
     // Player controls and fields that are private
     private float _moveInput;
@@ -26,7 +27,6 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D _rb;
     private bool _isGrounded;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -34,8 +34,6 @@ public class PlayerController : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    
-    //Called when player becomes enabled or active
     void OnEnable() {
         _controls.Player.Enable();
         _controls.Player.Jump.performed += OnJump;
@@ -47,22 +45,22 @@ public class PlayerController : MonoBehaviour
         _controls.Player.Disable();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // Read the 2D vector from the MoveAction
-       _moveInput = _controls.Player.Move.ReadValue<float>();
+        _moveInput = _controls.Player.Move.ReadValue<float>();
 
-       transform.position += Vector3.right * _moveInput * movementSpeed * Time.deltaTime;
-
-        // Set field to if player is on ground or not
-       _isGrounded = Physics2D.OverlapBox(groundCheck.position, groundCheckSize, 0f, groundLayer);
-
-       //Flip sprite when moving left
-       if (_moveInput > 0f)
+        if (_moveInput > 0f)
             spriteRenderer.flipX = false;
         else if (_moveInput < 0f)
             spriteRenderer.flipX = true;
+    }
+
+    void FixedUpdate()
+    {
+        _rb.linearVelocity = new Vector2(_moveInput * movementSpeed, _rb.linearVelocity.y);
+
+        Vector2 checkPosition = (Vector2)transform.position + Vector2.up * groundCheckOffset;
+        _isGrounded = Physics2D.OverlapBox(checkPosition, groundCheckSize, 0f, groundLayer);
     }
 
     void OnJump(InputAction.CallbackContext ctx)
@@ -83,17 +81,16 @@ public class PlayerController : MonoBehaviour
 
     void Die()
     {
-        //Spawn body at death location, facing the same way
         Instantiate(deadBodyPrefab, transform.position, transform.rotation);
 
-        _rb.linearVelocity = Vector2.zero; // Stop any falling jumping momentum
+        _rb.linearVelocity = Vector2.zero;
         transform.position = respawnPoint.position;
     }
 
     void OnDrawGizmosSelected()
     {
-        if (groundCheck == null) return;
+        Vector2 checkPosition = (Vector2)transform.position + Vector2.up * groundCheckOffset;
         Gizmos.color = Color.red;
-        Gizmos.DrawCube(groundCheck.position, groundCheckSize);
+        Gizmos.DrawCube(checkPosition, groundCheckSize);
     }
 }

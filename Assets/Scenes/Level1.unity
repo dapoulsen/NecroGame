@@ -119,11 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!4 &23457937 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2841657138979121694, guid: d9ecf35acd5f11e4394dbe312182d340, type: 3}
-  m_PrefabInstance: {fileID: 7172876150111720446}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1145866175
 GameObject:
   m_ObjectHideFlags: 0
@@ -5302,11 +5297,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1742049437 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 837931887206600152, guid: 64d12a14c98ac784985f812d88ee11e8, type: 3}
-  m_PrefabInstance: {fileID: 346679951704768311}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &346679951704768311
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5372,30 +5362,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 629635625927575394, guid: d9ecf35acd5f11e4394dbe312182d340, type: 3}
-      propertyPath: jumpForce
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 629635625927575394, guid: d9ecf35acd5f11e4394dbe312182d340, type: 3}
-      propertyPath: groundCheck
-      value: 
-      objectReference: {fileID: 23457937}
-    - target: {fileID: 629635625927575394, guid: d9ecf35acd5f11e4394dbe312182d340, type: 3}
-      propertyPath: respawnPoint
-      value: 
-      objectReference: {fileID: 1742049437}
-    - target: {fileID: 629635625927575394, guid: d9ecf35acd5f11e4394dbe312182d340, type: 3}
-      propertyPath: deadBodyPrefab
-      value: 
-      objectReference: {fileID: 8186893728755568091, guid: 996d28481deba9240bece17b3ba751db, type: 3}
-    - target: {fileID: 629635625927575394, guid: d9ecf35acd5f11e4394dbe312182d340, type: 3}
-      propertyPath: groundCheckSize.y
-      value: 0.07
-      objectReference: {fileID: 0}
-    - target: {fileID: 629635625927575394, guid: d9ecf35acd5f11e4394dbe312182d340, type: 3}
-      propertyPath: groundLayer.m_Bits
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 1343619354546393433, guid: d9ecf35acd5f11e4394dbe312182d340, type: 3}
       propertyPath: m_Name
       value: PlayerCharacter
@@ -5439,18 +5405,6 @@ PrefabInstance:
     - target: {fileID: 2253142168137051368, guid: d9ecf35acd5f11e4394dbe312182d340, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7724027535723982438, guid: d9ecf35acd5f11e4394dbe312182d340, type: 3}
-      propertyPath: m_GravityScale
-      value: 1.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8886635178956356722, guid: d9ecf35acd5f11e4394dbe312182d340, type: 3}
-      propertyPath: m_Size.y
-      value: 0.45273787
-      objectReference: {fileID: 0}
-    - target: {fileID: 8886635178956356722, guid: d9ecf35acd5f11e4394dbe312182d340, type: 3}
-      propertyPath: m_Offset.y
-      value: 0.0036310777
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5508,14 +5462,6 @@ PrefabInstance:
     - target: {fileID: 1349455244228787096, guid: 184f0897db6ef0d47bc94e57f6df37f8, type: 3}
       propertyPath: m_Name
       value: Grid
-      objectReference: {fileID: 0}
-    - target: {fileID: 4661763915610615865, guid: 184f0897db6ef0d47bc94e57f6df37f8, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 3.5249999
-      objectReference: {fileID: 0}
-    - target: {fileID: 4661763915610615865, guid: 184f0897db6ef0d47bc94e57f6df37f8, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 4.92
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
