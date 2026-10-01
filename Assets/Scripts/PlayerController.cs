@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -37,10 +38,12 @@ public class PlayerController : MonoBehaviour
     void OnEnable() {
         _controls.Player.Enable();
         _controls.Player.Jump.performed += OnJump;
+        _controls.Player.ResetGame.performed += OnGameReset;
     }
 
     void OnDisable()
     {
+        _controls.Player.ResetGame.performed -= OnGameReset;
         _controls.Player.Jump.performed -= OnJump;
         _controls.Player.Disable();
     }
@@ -82,9 +85,16 @@ public class PlayerController : MonoBehaviour
     void Die()
     {
         Instantiate(deadBodyPrefab, transform.position, transform.rotation);
+        DeathCounter.Instance.RegisterDeath();
 
         _rb.linearVelocity = Vector2.zero;
         transform.position = respawnPoint.position;
+    }
+
+    void OnGameReset(InputAction.CallbackContext ctx)
+    {
+        DeathCounter.Instance.ResetAll();
+        SceneManager.LoadScene("Level0");
     }
 
     void OnDrawGizmosSelected()
