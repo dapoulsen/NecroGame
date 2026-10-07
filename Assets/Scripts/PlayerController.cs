@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -27,6 +28,9 @@ public class PlayerController : MonoBehaviour
     private PlayerControls _controls;
     private Rigidbody2D _rb;
     private bool _isGrounded;
+    // Temporary invulnerability after respawn to avoid instant re-death
+    public float invulnerabilityDuration = 1.0f;
+    private bool _invulnerable = false;
 
     void Awake()
     {
@@ -79,7 +83,39 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Spike"))
         {
             Die();
-        }   
+        }
+        if (other.CompareTag("Arrow"))
+        {
+            if (_invulnerable) return;
+            Die();
+
+            // Make sure we only destroy the actual projectile instance
+            // and not a spawner or parent object that might share the collider/tag.
+            BallProjectile ball = other.GetComponent<BallProjectile>();
+            if (ball == null)
+            {
+                ball = other.GetComponentInParent<BallProjectile>();
+            }
+
+            if (ball != null)
+            {
+                // Use a helper so the ball's spawner will immediately spawn the next one
+                // Replace the ball's spawner when player is hit
+                if (ball != null && ball.GetSpawner() != null)
+                {
+                    BallSpawner oldSpawner = ball.GetSpawner();
+                    // Replace all spawners in the level
+                    BallSpawner.ReplaceAllSpawners();
+
+                    // Destroy the ball (spawner replacements will handle respawning)
+                    ball.DestroyByPlayer();
+                }
+                else
+                {
+                    ball.DestroyByPlayer();
+                }
+            }
+        }
     }
 
     void Die()
@@ -89,6 +125,16 @@ public class PlayerController : MonoBehaviour
 
         _rb.linearVelocity = Vector2.zero;
         transform.position = respawnPoint.position;
+
+        // Start temporary invulnerability so the player doesn't immediately die again
+        StartCoroutine(TemporaryInvulnerability());
+    }
+
+    private IEnumerator TemporaryInvulnerability()
+    {
+        _invulnerable = true;
+        yield return new WaitForSeconds(invulnerabilityDuration);
+        _invulnerable = false;
     }
 
     void OnGameReset(InputAction.CallbackContext ctx)
