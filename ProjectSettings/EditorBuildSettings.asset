@@ -26,6 +26,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Level6.unity
     guid: 63ef8c7c84738cf4ea49ba2f04e0a54f
+  - enabled: 1
+    path: Assets/Scenes/Winter/Winter-Level0.unity
+    guid: debad10175863c4498141949a2e43d3c
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 471f66bf9cdcd8c48ab0ddea9055c64b, type: 3}
