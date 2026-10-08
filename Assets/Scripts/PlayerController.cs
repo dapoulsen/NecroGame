@@ -99,21 +99,7 @@ public class PlayerController : MonoBehaviour
 
             if (ball != null)
             {
-                // Use a helper so the ball's spawner will immediately spawn the next one
-                // Replace the ball's spawner when player is hit
-                if (ball != null && ball.GetSpawner() != null)
-                {
-                    BallSpawner oldSpawner = ball.GetSpawner();
-                    // Replace all spawners in the level
-                    BallSpawner.ReplaceAllSpawners();
-
-                    // Destroy the ball (spawner replacements will handle respawning)
-                    ball.DestroyByPlayer();
-                }
-                else
-                {
-                    ball.DestroyByPlayer();
-                }
+                ball.DestroyByPlayer();
             }
         }
     }

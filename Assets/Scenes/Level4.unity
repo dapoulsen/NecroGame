@@ -247,6 +247,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   ballPrefab: {fileID: 1925143298236455113, guid: d7ee6711ae71f9f4788a0d09867bcad1, type: 3}
   spawnPoint: {fileID: 1014816470}
+  spawnInterval: 4
   shootRight: 0
 --- !u!4 &180491745
 Transform:
@@ -611,6 +612,10 @@ PrefabInstance:
     - target: {fileID: 1393497875786532681, guid: e6ce17e4b257c404bbc099b7bb58cda5, type: 3}
       propertyPath: m_Name
       value: Square
+      objectReference: {fileID: 0}
+    - target: {fileID: 3085655272443866966, guid: e6ce17e4b257c404bbc099b7bb58cda5, type: 3}
+      propertyPath: sceneName
+      value: Level5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2304,6 +2309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   ballPrefab: {fileID: 1925143298236455113, guid: d7ee6711ae71f9f4788a0d09867bcad1, type: 3}
   spawnPoint: {fileID: 1755232007}
+  spawnInterval: 4
   shootRight: 0
 --- !u!4 &2100512231
 Transform:
