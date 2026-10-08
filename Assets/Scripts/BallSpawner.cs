@@ -4,22 +4,38 @@ public class BallSpawner : MonoBehaviour
 {
     // Registry of all active spawners in the scene
     private static System.Collections.Generic.List<BallSpawner> _allSpawners = new System.Collections.Generic.List<BallSpawner>();
+    private static float _sharedSpawnTimer;
 
     public GameObject ballPrefab;
     public Transform spawnPoint;
+    public float spawnInterval = 2f;
 
     // True = right, False = left
     public bool shootRight = false;
 
-    // Track currently active ball per spawner to avoid duplicate active balls
-    private BallProjectile _currentBall;
-
-    void Start()
+    void Update()
     {
-        SpawnBall();
+        if (_allSpawners.Count == 0 || _allSpawners[0] != this)
+        {
+            return;
+        }
+
+        _sharedSpawnTimer -= Time.deltaTime;
+
+        if (_sharedSpawnTimer <= 0f)
+        {
+            SpawnAll();
+            _sharedSpawnTimer = GetSharedSpawnInterval();
+        }
     }
+
     void Awake()
     {
+        if (_allSpawners.Count == 0)
+        {
+            _sharedSpawnTimer = 0f;
+        }
+
         if (!_allSpawners.Contains(this))
             _allSpawners.Add(this);
     }
@@ -31,9 +47,6 @@ public class BallSpawner : MonoBehaviour
 
     public void SpawnBall()
     {
-        // Only spawn if this spawner doesn't already have an active ball
-        if (_currentBall != null) return;
-
         UnityEngine.Debug.Log($"BallSpawner.SpawnBall called on {gameObject.name}");
 
         GameObject newBall = Instantiate(
@@ -48,29 +61,45 @@ public class BallSpawner : MonoBehaviour
         {
             ball.SetSpawner(this);
             ball.SetDirection(shootRight);
-            _currentBall = ball;
         }
     }
 
     // Keep API compatibility: called by a BallProjectile when it's destroyed.
     public void NotifyBallDestroyed(BallProjectile ball)
     {
-        if (_currentBall == ball)
+        // Spawning is controlled by the shared timer, not by projectile destruction.
+    }
+
+    private static void SpawnAll()
+    {
+        foreach (var sp in _allSpawners.ToArray())
         {
-            _currentBall = null;
+            if (sp == null) continue;
+            sp.SpawnBall();
         }
     }
 
-    // Spawn balls on all spawners except the given one
-    public static void SpawnAllExcept(BallSpawner exclude)
+    private static float GetSharedSpawnInterval()
     {
+        float interval = float.MaxValue;
+
         foreach (var sp in _allSpawners)
         {
-            if (sp == null || sp == exclude) continue;
-            // Clear any record of current ball and spawn immediately
-            sp._currentBall = null;
-            sp.SpawnBall();
+            if (sp == null) continue;
+            interval = Mathf.Min(interval, sp.GetSpawnInterval());
         }
+
+        if (interval == float.MaxValue)
+        {
+            return 0.01f;
+        }
+
+        return interval;
+    }
+
+    private float GetSpawnInterval()
+    {
+        return Mathf.Max(0.01f, spawnInterval);
     }
     // Replace every spawner in the level with a fresh clone of itself.
     // This instantiates a copy of each spawner GameObject and destroys the original.

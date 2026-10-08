@@ -10,6 +10,7 @@ public class BallProjectile : MonoBehaviour
     private Camera mainCamera;
     private SpriteRenderer spriteRenderer;
     private bool hasLeftScreen = false;
+    private bool hasHandledDestruction = false;
 
     public void SetSpawner(BallSpawner ballSpawner)
     {
@@ -73,41 +74,35 @@ public class BallProjectile : MonoBehaviour
         {
             hasLeftScreen = true;
 
-            // Notify and spawn next balls, then destroy this arrow.
-            if (spawner != null)
-            {
-                spawner.NotifyBallDestroyed(this);
-                spawner.SpawnBall();
-                BallSpawner.SpawnAllExcept(spawner);
-            }
-
+            HandleDestruction();
             Destroy(gameObject);
         }
     }
 
-    // Called when the player collides with the ball. Ensure the spawner
-    // immediately spawns the next ball before destroying this projectile.
+    // Called when the player collides with the ball.
     public void DestroyByPlayer()
     {
-        if (spawner != null)
-        {
-            spawner.NotifyBallDestroyed(this);
-            spawner.SpawnBall();
-            BallSpawner.SpawnAllExcept(spawner);
-        }
-
+        HandleDestruction();
         Destroy(gameObject);
     }
 
     void OnDestroy()
     {
+        HandleDestruction();
+    }
+
+    private void HandleDestruction()
+    {
+        if (hasHandledDestruction)
+        {
+            return;
+        }
+
+        hasHandledDestruction = true;
+
         if (spawner != null)
         {
-            // Notify the owning spawner that this projectile is gone so it can
-            // clear its active-ball record and spawn its next ball.
             spawner.NotifyBallDestroyed(this);
-            UnityEngine.Debug.Log($"BallProjectile.OnDestroy notifying spawner {spawner.gameObject.name}");
-            spawner.SpawnBall();
         }
     }
 }
