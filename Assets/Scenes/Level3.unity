@@ -150,6 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   ballPrefab: {fileID: 1925143298236455113, guid: d7ee6711ae71f9f4788a0d09867bcad1, type: 3}
   spawnPoint: {fileID: 1014816470}
+  spawnInterval: 2
   shootRight: 0
 --- !u!4 &180491745
 Transform:
@@ -1257,6 +1258,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2913464220844079617, guid: 184f0897db6ef0d47bc94e57f6df37f8, type: 3}
+      propertyPath: m_TileColorArray.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2913464220844079617, guid: 184f0897db6ef0d47bc94e57f6df37f8, type: 3}
+      propertyPath: m_TileMatrixArray.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2913464220844079617, guid: 184f0897db6ef0d47bc94e57f6df37f8, type: 3}
+      propertyPath: m_TileSpriteArray.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2913464220844079617, guid: 184f0897db6ef0d47bc94e57f6df37f8, type: 3}
       propertyPath: m_TileAssetArray.Array.data[0].m_Data
       value: 
       objectReference: {fileID: 0}
@@ -1791,6 +1804,14 @@ PrefabInstance:
     - target: {fileID: 3516761352453720135, guid: 184f0897db6ef0d47bc94e57f6df37f8, type: 3}
       propertyPath: m_Tiles.Array.data[16].second.m_TileObjectToInstantiateIndex
       value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 8272638408881841532, guid: 184f0897db6ef0d47bc94e57f6df37f8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 8272638408881841532, guid: 184f0897db6ef0d47bc94e57f6df37f8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.74
       objectReference: {fileID: 0}
     - target: {fileID: 9107614329502913896, guid: 184f0897db6ef0d47bc94e57f6df37f8, type: 3}
       propertyPath: m_GeometryType
@@ -2876,7 +2897,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3085655272443866966, guid: e6ce17e4b257c404bbc099b7bb58cda5, type: 3}
       propertyPath: sceneName
-      value: Level4
+      value: Level3.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
