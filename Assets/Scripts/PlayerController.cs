@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour
     void OnEnable() {
         _controls.Player.Enable();
         _controls.Player.Jump.performed += OnJump;
+        _controls.Player.Jump.canceled += OnJumpCancelled;
         _controls.Player.ResetGame.performed += OnGameReset;
     }
 
@@ -49,6 +50,7 @@ public class PlayerController : MonoBehaviour
     {
         _controls.Player.ResetGame.performed -= OnGameReset;
         _controls.Player.Jump.performed -= OnJump;
+        _controls.Player.Jump.canceled -= OnJumpCancelled;
         _controls.Player.Disable();
     }
 
@@ -75,6 +77,14 @@ public class PlayerController : MonoBehaviour
         if (_isGrounded)
         {
             _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        }
+    }
+
+    void OnJumpCancelled(InputAction.CallbackContext ctx)
+    {
+        if (_rb.linearVelocity.y > 0f)
+        {
+            _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, _rb.linearVelocityY * 0.5f);
         }
     }
 
