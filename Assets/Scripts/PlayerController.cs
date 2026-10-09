@@ -147,7 +147,13 @@ public class PlayerController : MonoBehaviour
 
     void Die()
     {
-        Instantiate(deadBodyPrefab, transform.position, transform.rotation);
+        GameObject bodyToSpawn = deadBodyPrefab;
+        if (LevelSettings.Instance != null && LevelSettings.Instance.deadBodyOverride != null)
+        {
+            bodyToSpawn = LevelSettings.Instance.deadBodyOverride;
+        }
+        
+        Instantiate(bodyToSpawn, transform.position, transform.rotation);
         DeathCounter.Instance.RegisterDeath();
 
         _rb.linearVelocity = Vector2.zero;
