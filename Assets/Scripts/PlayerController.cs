@@ -36,6 +36,11 @@ public class PlayerController : MonoBehaviour
     // Coyote time
     public float coyoteTime = 0.1f;
     private float _coyoteTimer;
+    
+    // Jump buffering
+    public float jumpBufferTime = 0.1f;
+    private float _jumpBufferTimer;
+    private bool _jumpHeld;
 
     void Awake()
     {
@@ -73,27 +78,41 @@ public class PlayerController : MonoBehaviour
     {
         //Moving
         _rb.linearVelocity = new Vector2(_moveInput * movementSpeed, _rb.linearVelocity.y);
+        
+        
         //Jumping
         Vector2 checkPosition = (Vector2)transform.position + Vector2.up * groundCheckOffset;
         _isGrounded = Physics2D.OverlapBox(checkPosition, groundCheckSize, 0f, groundLayer);
 
+        //Coyote time
         if (_isGrounded && _rb.linearVelocity.y < coyoteTime)
             _coyoteTimer = coyoteTime;
         else 
             _coyoteTimer -= Time.fixedDeltaTime;
-    }
+        
+        //Jump buffering
+        _jumpBufferTimer -= Time.fixedDeltaTime;
 
-    void OnJump(InputAction.CallbackContext ctx)
-    {
-        if (_coyoteTimer > 0f)
+        if (_jumpBufferTimer > 0f && _coyoteTimer > 0f)
         {
-            _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            //If the button is already released before landing, do a short jump
+            float jumpSpeed = _jumpHeld ? jumpForce : jumpForce * 0.4f;
+            _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, jumpSpeed);
+
+            _jumpBufferTimer = 0f;
             _coyoteTimer = 0f;
         }
     }
 
+    void OnJump(InputAction.CallbackContext ctx)
+    {
+        _jumpBufferTimer = jumpBufferTime;
+        _jumpHeld = true;
+    }
+
     void OnJumpCancelled(InputAction.CallbackContext ctx)
     {
+        _jumpHeld = false;
         if (_rb.linearVelocity.y > 0f)
         {
             _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, _rb.linearVelocityY * 0.5f);
