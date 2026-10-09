@@ -28,9 +28,19 @@ public class PlayerController : MonoBehaviour
     private PlayerControls _controls;
     private Rigidbody2D _rb;
     private bool _isGrounded;
+    
     // Temporary invulnerability after respawn to avoid instant re-death
     public float invulnerabilityDuration = 1.0f;
     private bool _invulnerable = false;
+    
+    // Coyote time
+    public float coyoteTime = 0.1f;
+    private float _coyoteTimer;
+    
+    // Jump buffering
+    public float jumpBufferTime = 0.1f;
+    private float _jumpBufferTimer;
+    private bool _jumpHeld;
 
     void Awake()
     {
@@ -42,6 +52,7 @@ public class PlayerController : MonoBehaviour
     void OnEnable() {
         _controls.Player.Enable();
         _controls.Player.Jump.performed += OnJump;
+        _controls.Player.Jump.canceled += OnJumpCancelled;
         _controls.Player.ResetGame.performed += OnGameReset;
     }
 
@@ -49,6 +60,7 @@ public class PlayerController : MonoBehaviour
     {
         _controls.Player.ResetGame.performed -= OnGameReset;
         _controls.Player.Jump.performed -= OnJump;
+        _controls.Player.Jump.canceled -= OnJumpCancelled;
         _controls.Player.Disable();
     }
 
@@ -64,17 +76,46 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        //Moving
         _rb.linearVelocity = new Vector2(_moveInput * movementSpeed, _rb.linearVelocity.y);
-
+        
+        
+        //Jumping
         Vector2 checkPosition = (Vector2)transform.position + Vector2.up * groundCheckOffset;
         _isGrounded = Physics2D.OverlapBox(checkPosition, groundCheckSize, 0f, groundLayer);
+
+        //Coyote time
+        if (_isGrounded && _rb.linearVelocity.y < coyoteTime)
+            _coyoteTimer = coyoteTime;
+        else 
+            _coyoteTimer -= Time.fixedDeltaTime;
+        
+        //Jump buffering
+        _jumpBufferTimer -= Time.fixedDeltaTime;
+
+        if (_jumpBufferTimer > 0f && _coyoteTimer > 0f)
+        {
+            //If the button is already released before landing, do a short jump
+            float jumpSpeed = _jumpHeld ? jumpForce : jumpForce * 0.4f;
+            _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, jumpSpeed);
+
+            _jumpBufferTimer = 0f;
+            _coyoteTimer = 0f;
+        }
     }
 
     void OnJump(InputAction.CallbackContext ctx)
     {
-        if (_isGrounded)
+        _jumpBufferTimer = jumpBufferTime;
+        _jumpHeld = true;
+    }
+
+    void OnJumpCancelled(InputAction.CallbackContext ctx)
+    {
+        _jumpHeld = false;
+        if (_rb.linearVelocity.y > 0f)
         {
-            _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, _rb.linearVelocityY * 0.5f);
         }
     }
 
