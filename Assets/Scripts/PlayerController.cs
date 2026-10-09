@@ -28,9 +28,14 @@ public class PlayerController : MonoBehaviour
     private PlayerControls _controls;
     private Rigidbody2D _rb;
     private bool _isGrounded;
+    
     // Temporary invulnerability after respawn to avoid instant re-death
     public float invulnerabilityDuration = 1.0f;
     private bool _invulnerable = false;
+    
+    // Coyote time
+    public float coyoteTime = 0.1f;
+    private float _coyoteTimer;
 
     void Awake()
     {
@@ -66,17 +71,24 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        //Moving
         _rb.linearVelocity = new Vector2(_moveInput * movementSpeed, _rb.linearVelocity.y);
-
+        //Jumping
         Vector2 checkPosition = (Vector2)transform.position + Vector2.up * groundCheckOffset;
         _isGrounded = Physics2D.OverlapBox(checkPosition, groundCheckSize, 0f, groundLayer);
+
+        if (_isGrounded && _rb.linearVelocity.y < coyoteTime)
+            _coyoteTimer = coyoteTime;
+        else 
+            _coyoteTimer -= Time.fixedDeltaTime;
     }
 
     void OnJump(InputAction.CallbackContext ctx)
     {
-        if (_isGrounded)
+        if (_coyoteTimer > 0f)
         {
             _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            _coyoteTimer = 0f;
         }
     }
 
