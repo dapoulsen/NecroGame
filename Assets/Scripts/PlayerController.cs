@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -22,6 +21,7 @@ public class PlayerController : MonoBehaviour
 
     // Sprite to flip it when moving left
     private SpriteRenderer spriteRenderer;
+    private Color _defaultSpriteColor;
 
     // Player controls and fields that are private
     private float _moveInput;
@@ -32,6 +32,11 @@ public class PlayerController : MonoBehaviour
     // Temporary invulnerability after respawn to avoid instant re-death
     public float invulnerabilityDuration = 1.0f;
     private bool _invulnerable = false;
+
+    // Frozen death
+    public float frozenDeathDelay = 5f;
+    public Color frozenColor = Color.blue;
+    private Coroutine _frozenCoroutine;
     
     // Coyote time
     public float coyoteTime = 0.1f;
@@ -47,18 +52,17 @@ public class PlayerController : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _controls = new PlayerControls();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        _defaultSpriteColor = spriteRenderer.color;
     }
 
     void OnEnable() {
         _controls.Player.Enable();
         _controls.Player.Jump.performed += OnJump;
         _controls.Player.Jump.canceled += OnJumpCancelled;
-        _controls.Player.ResetGame.performed += OnGameReset;
     }
 
     void OnDisable()
     {
-        _controls.Player.ResetGame.performed -= OnGameReset;
         _controls.Player.Jump.performed -= OnJump;
         _controls.Player.Jump.canceled -= OnJumpCancelled;
         _controls.Player.Disable();
@@ -143,10 +147,16 @@ public class PlayerController : MonoBehaviour
                 ball.DestroyByPlayer();
             }
         }
+        if (other.CompareTag("Frozen"))
+        {
+            FreezePlayer();
+        }
     }
 
     void Die()
     {
+        ClearFrozen();
+
         GameObject bodyToSpawn = deadBodyPrefab;
         if (LevelSettings.Instance != null && LevelSettings.Instance.deadBodyOverride != null)
         {
@@ -163,17 +173,40 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(TemporaryInvulnerability());
     }
 
+    private void FreezePlayer()
+    {
+        if (_frozenCoroutine != null)
+        {
+            return;
+        }
+
+        spriteRenderer.color = frozenColor;
+        _frozenCoroutine = StartCoroutine(DieFromFrozen());
+    }
+
+    private IEnumerator DieFromFrozen()
+    {
+        yield return new WaitForSeconds(frozenDeathDelay);
+        _frozenCoroutine = null;
+        Die();
+    }
+
+    private void ClearFrozen()
+    {
+        if (_frozenCoroutine != null)
+        {
+            StopCoroutine(_frozenCoroutine);
+            _frozenCoroutine = null;
+        }
+
+        spriteRenderer.color = _defaultSpriteColor;
+    }
+
     private IEnumerator TemporaryInvulnerability()
     {
         _invulnerable = true;
         yield return new WaitForSeconds(invulnerabilityDuration);
         _invulnerable = false;
-    }
-
-    void OnGameReset(InputAction.CallbackContext ctx)
-    {
-        DeathCounter.Instance.ResetAll();
-        SceneManager.LoadScene("Level0");
     }
 
     void OnDrawGizmosSelected()
