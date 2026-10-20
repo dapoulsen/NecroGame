@@ -36,8 +36,10 @@ public class PlayerController : MonoBehaviour
     // Frozen death
     public float frozenDeathDelay = 5f;
     public Color frozenColor = Color.blue;
-    private Coroutine _frozenCoroutine;
-    
+    public RadialFillManager frozenRadial;
+    private bool _isFrozen;
+    private float _frozenTimeLeft;
+
     // Coyote time
     public float coyoteTime = 0.1f;
     private float _coyoteTimer;
@@ -53,6 +55,7 @@ public class PlayerController : MonoBehaviour
         _controls = new PlayerControls();
         spriteRenderer = GetComponent<SpriteRenderer>();
         _defaultSpriteColor = spriteRenderer.color;
+        ClearFrozen();
     }
 
     void OnEnable() {
@@ -76,6 +79,15 @@ public class PlayerController : MonoBehaviour
             spriteRenderer.flipX = false;
         else if (_moveInput < 0f)
             spriteRenderer.flipX = true;
+        
+        if (_isFrozen)
+        {
+            _frozenTimeLeft -= Time.deltaTime;
+            frozenRadial.SetProgress(_frozenTimeLeft / frozenDeathDelay);
+
+            if (_frozenTimeLeft <= 0f)
+                Die();
+        }
     }
 
     void FixedUpdate()
@@ -175,31 +187,19 @@ public class PlayerController : MonoBehaviour
 
     private void FreezePlayer()
     {
-        if (_frozenCoroutine != null)
-        {
-            return;
-        }
+        if (_isFrozen) return;
 
+        _isFrozen = true;
+        _frozenTimeLeft = frozenDeathDelay;
         spriteRenderer.color = frozenColor;
-        _frozenCoroutine = StartCoroutine(DieFromFrozen());
-    }
-
-    private IEnumerator DieFromFrozen()
-    {
-        yield return new WaitForSeconds(frozenDeathDelay);
-        _frozenCoroutine = null;
-        Die();
+        if (frozenRadial != null) frozenRadial.Show();
     }
 
     private void ClearFrozen()
     {
-        if (_frozenCoroutine != null)
-        {
-            StopCoroutine(_frozenCoroutine);
-            _frozenCoroutine = null;
-        }
-
+        _isFrozen = false;
         spriteRenderer.color = _defaultSpriteColor;
+        if (frozenRadial != null) frozenRadial.Hide();
     }
 
     private IEnumerator TemporaryInvulnerability()
