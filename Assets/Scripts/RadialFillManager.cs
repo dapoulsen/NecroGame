@@ -1,42 +1,42 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class RadialFillManager : MonoBehaviour
 {
-    [SerializeField] Image radialFillImage;
-    [SerializeField] float fillDuration = 1f;
-    
-    private Coroutine _fillCoroutine = null;
+    [Header("References")]
+    [SerializeField] GameObject radialRoot;  // the "RadialFill" child
+    [SerializeField] Image fillImage;        // the "Fill" grandchild
 
-    public void UpdateRadialProgressCircle(int valueTofill, int maxFill)
+    [Header("Follow")]
+    [SerializeField] Transform target;       // the player (auto-found if empty)
+    [SerializeField] Vector3 offset = new Vector3(0f, 1f, 0f);
+
+    void Awake()
     {
-        float targetFillAmount = (float)(valueTofill + 1) / maxFill;
-
-        if (_fillCoroutine == null)
+        if (target == null)
         {
-            StopCoroutine(_fillCoroutine);
+            var player = FindFirstObjectByType<PlayerController>();
+            if (player != null) target = player.transform;
         }
-        
-        _fillCoroutine = StartCoroutine(AnimateFill(targetFillAmount));
     }
 
-    private IEnumerator AnimateFill(float targetFillAmount)
+    void LateUpdate()
     {
-        float initialFillAmount = radialFillImage.fillAmount;
-        float elapsedTime = 0f;
+        if (target != null)
+            transform.position = target.position + offset;
+    }
 
-        while (elapsedTime < fillDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            radialFillImage.fillAmount = Mathf.Lerp(initialFillAmount, targetFillAmount, elapsedTime / fillDuration);
-            yield return null;
-        }
-        
-        radialFillImage.fillAmount = targetFillAmount;
-        
-        _fillCoroutine = null;
+    public void Show()
+    {
+        radialRoot.SetActive(true);
+        SetProgress(1f);
+    }
+
+    public void Hide() => radialRoot.SetActive(false);
+
+    // 1 = full, 0 = empty
+    public void SetProgress(float t)
+    {
+        fillImage.fillAmount = Mathf.Clamp01(t);
     }
 }
-
-
