@@ -32,6 +32,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Level3.5.unity
     guid: 62f343ad041d0e94c9f879182f0895b4
+  - enabled: 1
+    path: Assets/Scenes/Winter/Winter-Level1.unity
+    guid: 50d9d3c733f37d04088b52b37afd4098
+  - enabled: 1
+    path: Assets/Scenes/Winter/Winter-Level2.unity
+    guid: 75b56b129dab2cc4c8c6094412ce6afd
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 471f66bf9cdcd8c48ab0ddea9055c64b, type: 3}
