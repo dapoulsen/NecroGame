@@ -49,12 +49,19 @@ public class PlayerController : MonoBehaviour
     private float _jumpBufferTimer;
     private bool _jumpHeld;
 
+    //Sound effects
+    private AudioSource _playerAudio;
+    public AudioClip deathSound;
+    public AudioClip jumpSound;
+    public AudioClip blizzardCountdownSound;
+
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _controls = new PlayerControls();
         spriteRenderer = GetComponent<SpriteRenderer>();
         _defaultSpriteColor = spriteRenderer.color;
+        _playerAudio = GetComponent<AudioSource>();
         ClearFrozen();
     }
 
@@ -114,6 +121,8 @@ public class PlayerController : MonoBehaviour
             //If the button is already released before landing, do a short jump
             float jumpSpeed = _jumpHeld ? jumpForce : jumpForce * 0.4f;
             _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, jumpSpeed);
+            RandomizePitch(_playerAudio);
+            _playerAudio.PlayOneShot(jumpSound, 1.0f);
 
             _jumpBufferTimer = 0f;
             _coyoteTimer = 0f;
@@ -161,12 +170,16 @@ public class PlayerController : MonoBehaviour
         }
         if (other.CompareTag("Frozen"))
         {
+            _playerAudio.PlayOneShot(blizzardCountdownSound, 0.5f);
             FreezePlayer();
         }
     }
 
     void Die()
     {
+        RandomizePitch(_playerAudio);
+        _playerAudio.PlayOneShot(deathSound, 0.5f);
+
         ClearFrozen();
 
         GameObject bodyToSpawn = deadBodyPrefab;
@@ -207,6 +220,12 @@ public class PlayerController : MonoBehaviour
         _invulnerable = true;
         yield return new WaitForSeconds(invulnerabilityDuration);
         _invulnerable = false;
+    }
+
+    private void RandomizePitch(AudioSource audioSource)
+    {
+        float randomValue = UnityEngine.Random.Range(0.9f, 1.1f);
+        audioSource.pitch = randomValue;
     }
 
     void OnDrawGizmosSelected()
