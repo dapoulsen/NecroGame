@@ -53,6 +53,7 @@ public class PlayerController : MonoBehaviour
     private AudioSource _playerAudio;
     public AudioClip deathSound;
     public AudioClip jumpSound;
+    public AudioClip blizzardCountdownSound;
 
     void Awake()
     {
@@ -169,6 +170,7 @@ public class PlayerController : MonoBehaviour
         }
         if (other.CompareTag("Frozen"))
         {
+            _playerAudio.PlayOneShot(blizzardCountdownSound, 0.5f);
             FreezePlayer();
         }
     }
